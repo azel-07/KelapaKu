@@ -257,7 +257,7 @@ function WholesaleBox({
             ? "Harga grosir hanya tampil untuk pelanggan grosir yang sudah disetujui."
             : "Masuk sebagai pelanggan grosir terverifikasi untuk melihat harga grosir."}{" "}
           {!loggedIn && (
-            <Link to="/login" className="font-medium text-primary underline-offset-4 hover:underline">Masuk</Link>
+            <Link to="/login" search={{ redirect: undefined }} className="font-medium text-primary underline-offset-4 hover:underline">Masuk</Link>
           )}
         </p>
       ) : loading ? (
