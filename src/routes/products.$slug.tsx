@@ -9,7 +9,7 @@ import { ErrorState } from "@/components/states/ErrorState";
 import { ProductImage } from "@/components/product/ProductImage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { priceTiersQuery, productDetailQuery } from "@/lib/catalog";
+import { priceTiersQuery, productDetailQuery, type ProductDetail as Detail } from "@/lib/catalog";
 import { formatNumber, formatRupiah } from "@/lib/format";
 import { resolveImageUrl } from "@/lib/images";
 import { useAuth } from "@/lib/auth";
@@ -62,7 +62,6 @@ function ProductDetailPage() {
   );
 }
 
-type Detail = NonNullable<Awaited<ReturnType<NonNullable<ReturnType<typeof productDetailQuery>["queryFn"]>>>>;
 
 function ProductDetail({ product }: { product: Detail }) {
   const { user, isWholesale, isAdmin } = useAuth();

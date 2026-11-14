@@ -65,22 +65,21 @@ export const featuredProductsQuery = () =>
     },
   });
 
+export async function fetchProductDetail(slug: string) {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*, categories(id, name, slug), product_images(id, image_url, alt_text, is_primary, sort_order)")
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export type ProductDetail = NonNullable<Awaited<ReturnType<typeof fetchProductDetail>>>;
+
 export const productDetailQuery = (slug: string) =>
-  queryOptions({
-    queryKey: ["product", slug],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select(
-          "*, categories(id, name, slug), product_images(id, image_url, alt_text, is_primary, sort_order)",
-        )
-        .eq("slug", slug)
-        .eq("is_active", true)
-        .maybeSingle();
-      if (error) throw error;
-      return data;
-    },
-  });
+  queryOptions({ queryKey: ["product", slug], queryFn: () => fetchProductDetail(slug) });
 
 // Hanya terbaca untuk pelanggan grosir yang disetujui atau admin (sesuai RLS).
 export const priceTiersQuery = (productId: string, userId: string | undefined) =>
