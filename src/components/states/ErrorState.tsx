@@ -8,10 +8,10 @@ export function ErrorState({
   onRetry,
   className,
 }: {
-  title?: string;
-  message?: string;
-  onRetry?: () => void;
-  className?: string;
+  title?: string | undefined;
+  message?: string | undefined;
+  onRetry?: (() => void) | undefined;
+  className?: string | undefined;
 }) {
   return (
     <div className={cn("flex flex-col items-center justify-center rounded-3xl border border-destructive/30 bg-destructive/5 px-6 py-12 text-center", className)} role="alert">
