@@ -243,7 +243,7 @@ function WholesaleBox({
   tiers: { id: string; tier_name: string; min_quantity: number; max_quantity: number | null; unit_price: number }[];
   loading: boolean;
   unit: string;
-  activeTierId?: string;
+  activeTierId?: string | undefined;
 }) {
   if (canSee && !loading && tiers.length === 0) return null;
   return (

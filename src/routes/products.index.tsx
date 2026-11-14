@@ -14,13 +14,13 @@ import { categoriesQuery, productsQuery } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 
 type SortKey = "terbaru" | "termurah" | "termahal";
-type ProductSearch = { kategori?: string; q?: string; urut?: SortKey };
+type ProductSearch = { kategori?: string | undefined; q?: string | undefined; urut?: SortKey | undefined };
 
 export const Route = createFileRoute("/products/")({
   validateSearch: (search: Record<string, unknown>): ProductSearch => ({
-    kategori: typeof search.kategori === "string" && search.kategori ? search.kategori : undefined,
-    q: typeof search.q === "string" && search.q ? search.q : undefined,
-    urut: search.urut === "termurah" || search.urut === "termahal" ? search.urut : undefined,
+    kategori: typeof search["kategori"] === "string" && search["kategori"] ? search["kategori"] : undefined,
+    q: typeof search["q"] === "string" && search["q"] ? search["q"] : undefined,
+    urut: search["urut"] === "termurah" || search["urut"] === "termahal" ? search["urut"] : undefined,
   }),
   head: () => ({
     meta: [

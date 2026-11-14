@@ -36,7 +36,7 @@ type Field = "fullName" | "email" | "password" | "confirm";
 
 function RegisterPage() {
   const [values, setValues] = useState<Record<Field, string>>({ fullName: "", email: "", password: "", confirm: "" });
-  const [errors, setErrors] = useState<Partial<Record<Field | "form", string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<Field | "form", string | undefined>>>({});
   const [loading, setLoading] = useState(false);
   const [sentTo, setSentTo] = useState<string | null>(null);
 

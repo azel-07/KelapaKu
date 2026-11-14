@@ -24,7 +24,8 @@ const CATEGORY_FALLBACK: Record<string, string> = {
 };
 
 export function categoryImage(category: { slug: string; image_url: string | null }) {
-  return resolveImageUrl(category.image_url) ?? (CATEGORY_FALLBACK[category.slug] ? storagePublicUrl(CATEGORY_FALLBACK[category.slug]) : null);
+  const fallback = CATEGORY_FALLBACK[category.slug];
+  return resolveImageUrl(category.image_url) ?? (fallback ? storagePublicUrl(fallback) : null);
 }
 
 export function primaryImage(
@@ -34,5 +35,5 @@ export function primaryImage(
   const sorted = [...images].sort(
     (a, b) => Number(b.is_primary) - Number(a.is_primary) || a.sort_order - b.sort_order,
   );
-  return resolveImageUrl(sorted[0].image_url);
+  return resolveImageUrl(sorted[0]?.image_url);
 }

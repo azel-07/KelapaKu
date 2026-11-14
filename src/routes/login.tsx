@@ -30,7 +30,7 @@ const schema = z.object({
   password: z.string().min(1, "Password wajib diisi").max(72),
 });
 
-type Errors = Partial<Record<"email" | "password" | "form", string>>;
+type Errors = Partial<Record<"email" | "password" | "form", string | undefined>>;
 
 function LoginPage() {
   const navigate = useNavigate();
