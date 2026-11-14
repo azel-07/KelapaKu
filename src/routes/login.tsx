@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
@@ -12,6 +12,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { fetchProfile } from "@/lib/auth";
 
 export const Route = createFileRoute("/login")({
+  validateSearch: (s: Record<string, unknown>): { redirect?: string | undefined } => ({
+    redirect: typeof s["redirect"] === "string" ? s["redirect"] : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Masuk — KelapaKu" },
@@ -34,6 +37,8 @@ type Errors = Partial<Record<"email" | "password" | "form", string | undefined>>
 
 function LoginPage() {
   const navigate = useNavigate();
+  const router = useRouter();
+  const { redirect: redirectTo } = Route.useSearch();
   const queryClient = useQueryClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -73,9 +78,15 @@ function LoginPage() {
         return;
       }
       toast.success(`Selamat datang, ${profile?.full_name || "Pelanggan"}!`);
-      // Arahkan berdasarkan role dari tabel profiles.
-      // TODO tahap berikutnya: admin -> /admin, customer -> /my-orders.
-      navigate({ to: profile?.role === "admin" ? "/" : "/products", replace: true });
+      // Kembali ke halaman yang diminta (hanya path internal), atau arahkan berdasarkan role di tabel profiles.
+      const safe = redirectTo && redirectTo.startsWith("/") && !redirectTo.startsWith("//") && !redirectTo.startsWith("/login");
+      if (safe && profile?.role !== "admin") {
+        router.history.replace(redirectTo);
+      } else if (profile?.role === "admin") {
+        navigate({ to: "/", replace: true });
+      } else {
+        navigate({ to: "/my-orders", search: { pesanan: undefined }, replace: true });
+      }
     } catch {
       setErrors({ form: "Profil pengguna tidak dapat dimuat." });
       setLoading(false);

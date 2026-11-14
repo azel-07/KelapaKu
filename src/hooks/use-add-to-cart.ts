@@ -46,7 +46,7 @@ export function useAddToCart() {
   const addToCart = (input: Input) => {
     if (!user) {
       toast.info("Silakan masuk terlebih dahulu untuk berbelanja");
-      navigate({ to: "/login" });
+      navigate({ to: "/login", search: { redirect: window.location.pathname + window.location.search } });
       return;
     }
     if (input.stock <= 0) {
