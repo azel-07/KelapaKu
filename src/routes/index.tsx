@@ -67,6 +67,7 @@ function Hero() {
         className="absolute inset-0 size-full object-cover object-right"
       />
       <div className="absolute inset-0 bg-hero" />
+      <div className="absolute inset-0 bg-cream/80 md:hidden" />
       <div className="container-page relative flex min-h-[560px] items-center py-16 md:min-h-[640px]">
         <div className="max-w-xl animate-rise">
           <span className="eyebrow">
