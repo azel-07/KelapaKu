@@ -1,6 +1,15 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LogOut, Menu, ShoppingBag, User, X } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu, Package, ShoppingBag, ShoppingCart, User, UserRound, X } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useCart } from "@/hooks/use-cart";
 import { Button } from "@/components/ui/button";
 import { Logo } from "./Logo";
 import { useAuth } from "@/lib/auth";
@@ -15,7 +24,8 @@ const NAV = [
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
-  const { user, profile, signOut, loading } = useAuth();
+  const { user, profile, signOut, loading, isAdmin } = useAuth();
+  const { itemCount } = useCart();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -48,13 +58,33 @@ export function Navbar() {
             <div className="h-9 w-40 animate-pulse rounded-full bg-muted" />
           ) : user ? (
             <>
-              <span className="flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-sm text-secondary-foreground">
-                <User className="size-4" />
-                <span className="max-w-32 truncate">{profile?.full_name || user.email}</span>
-              </span>
-              <Button variant="ghost" size="sm" onClick={handleSignOut}>
-                <LogOut /> Keluar
-              </Button>
+              <CartButton count={itemCount} />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="cream" className="max-w-52">
+                    <User /> <span className="truncate">{profile?.full_name || user.email}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 rounded-2xl">
+                  <DropdownMenuLabel className="truncate text-xs font-normal text-muted-foreground">{user.email}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/"><LayoutDashboard /> Dashboard Admin</Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile"><UserRound /> Profil & Alamat</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/my-orders" search={{ pesanan: undefined }}><Package /> Pesanan Saya</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onSelect={handleSignOut} className="text-destructive focus:text-destructive">
+                    <LogOut /> Keluar
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           ) : (
             <>
@@ -68,6 +98,8 @@ export function Navbar() {
           )}
         </div>
 
+        <div className="flex items-center gap-1 md:hidden">
+          {user && <CartButton count={itemCount} />}
         <button
           type="button"
           className="grid size-10 place-items-center rounded-full text-primary hover:bg-primary-soft md:hidden"
@@ -77,6 +109,7 @@ export function Navbar() {
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
+        </div>
       </nav>
 
       <div className={cn("border-t border-border/60 bg-background md:hidden", open ? "block" : "hidden")}>
@@ -92,6 +125,12 @@ export function Navbar() {
               {item.label}
             </Link>
           ))}
+          {user && (
+            <div className="mt-2 flex flex-col gap-1 border-t border-border pt-3">
+              <Link to="/profile" onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 text-sm font-medium hover:bg-muted">Profil & Alamat</Link>
+              <Link to="/my-orders" search={{ pesanan: undefined }} onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 text-sm font-medium hover:bg-muted">Pesanan Saya</Link>
+            </div>
+          )}
           <div className="mt-3 flex gap-2 border-t border-border pt-4">
             {user ? (
               <Button variant="outline" className="flex-1" onClick={handleSignOut}>
@@ -113,5 +152,22 @@ export function Navbar() {
         </div>
       </div>
     </header>
+  );
+}
+
+function CartButton({ count }: { count: number }) {
+  return (
+    <Link
+      to="/cart"
+      className="relative grid size-10 place-items-center rounded-full text-primary transition-colors hover:bg-primary-soft"
+      aria-label={`Keranjang (${count} produk)`}
+    >
+      <ShoppingCart className="size-5" />
+      {count > 0 && (
+        <span className="absolute -right-0.5 -top-0.5 grid min-w-5 place-items-center rounded-full bg-earth px-1 text-[10px] font-bold text-earth-foreground">
+          {count}
+        </span>
+      )}
+    </Link>
   );
 }
