@@ -736,6 +736,35 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_order_from_cart: {
+        Args: { p_address_id: string; p_customer_note?: string }
+        Returns: {
+          address_id: string | null
+          admin_note: string | null
+          created_at: string
+          customer_email_snapshot: string | null
+          customer_name_snapshot: string
+          customer_note: string | null
+          customer_phone_snapshot: string
+          id: string
+          order_number: string
+          order_status: Database["public"]["Enums"]["order_status"]
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          shipping_address_snapshot: Json
+          shipping_cost: number
+          subtotal: number
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "orders"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       is_admin: { Args: never; Returns: boolean }
       is_approved_wholesale: { Args: never; Returns: boolean }
     }
