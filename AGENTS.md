@@ -28,3 +28,9 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Public pages wrap content in `SiteLayout` (Navbar + Footer); admin pages will use their own layout. Why: admin needs a sidebar shell, storefront does not.
+- Catalog reads go through query options in `src/lib/catalog.ts` using the browser Supabase client and public RLS. Why: one place for column names that match the existing schema.
+- Auth/profile state comes from `AuthProvider` in `src/lib/auth.tsx`; role checks read `profiles.role`. Why: roles live in the existing profiles table.
+- Image paths in `product_images.image_url` / `categories.image_url` may be full URLs or paths inside the `product-images` bucket; resolve via `resolveImageUrl`. Why: bucket already holds uploaded photos.
