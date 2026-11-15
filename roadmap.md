@@ -5,7 +5,9 @@
 - [x] Perbaikan keamanan DB: kunci kolom role/account_type, policy storage, fungsi checkout aman, status awal, hak akses pengunjung
 - [x] Tahap 4: Profil pengguna + alamat, redirect login (admin -> / sementara sampai /admin ada)
 - [x] Tahap 5: Keranjang, checkout (fungsi aman), riwayat pesanan
-- [ ] Tahap 6: Dashboard admin + semua manajemen (lalu arahkan login admin & menu "Dashboard Admin" ke /admin)
+- [x] Tahap 6: Dashboard admin + semua manajemen
 - [ ] Tahap 7: Pengujian menyeluruh
 - [ ] Ganti info kontak contoh (WhatsApp, email, alamat) dengan data asli
 - [ ] Keputusan user: ongkos kirim (saat ini Rp0) dan cara pembayaran/upload bukti transfer
+- [ ] Fitur customer: form pengajuan grosir, form permintaan penawaran, kirim bukti pembayaran (menunggu keputusan pembayaran)
+- [ ] Opsional: kembalikan stok otomatis saat pesanan dibatalkan (perlu persetujuan perubahan DB)
