@@ -659,6 +659,51 @@ export type Database = {
           },
         ]
       }
+      store_settings: {
+        Row: {
+          address: string | null
+          created_at: string
+          email: string | null
+          id: number
+          instagram: string | null
+          maps_url: string | null
+          operating_hours: string | null
+          phone: string | null
+          store_name: string
+          tagline: string | null
+          updated_at: string
+          whatsapp_number: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          id?: number
+          instagram?: string | null
+          maps_url?: string | null
+          operating_hours?: string | null
+          phone?: string | null
+          store_name?: string
+          tagline?: string | null
+          updated_at?: string
+          whatsapp_number?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          id?: number
+          instagram?: string | null
+          maps_url?: string | null
+          operating_hours?: string | null
+          phone?: string | null
+          store_name?: string
+          tagline?: string | null
+          updated_at?: string
+          whatsapp_number?: string
+        }
+        Relationships: []
+      }
       wholesale_applications: {
         Row: {
           business_address: string
