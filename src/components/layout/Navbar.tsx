@@ -70,7 +70,7 @@ export function Navbar() {
                   <DropdownMenuSeparator />
                   {isAdmin && (
                     <DropdownMenuItem asChild>
-                      <Link to="/"><LayoutDashboard /> Dashboard Admin</Link>
+                      <Link to="/admin"><LayoutDashboard /> Dashboard Admin</Link>
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuItem asChild>
@@ -127,6 +127,7 @@ export function Navbar() {
           ))}
           {user && (
             <div className="mt-2 flex flex-col gap-1 border-t border-border pt-3">
+              {isAdmin && <Link to="/admin" onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 text-sm font-medium text-primary hover:bg-muted">Dashboard Admin</Link>}
               <Link to="/profile" onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 text-sm font-medium hover:bg-muted">Profil & Alamat</Link>
               <Link to="/my-orders" search={{ pesanan: undefined }} onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 text-sm font-medium hover:bg-muted">Pesanan Saya</Link>
             </div>

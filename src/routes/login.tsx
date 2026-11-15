@@ -80,10 +80,10 @@ function LoginPage() {
       toast.success(`Selamat datang, ${profile?.full_name || "Pelanggan"}!`);
       // Kembali ke halaman yang diminta (hanya path internal), atau arahkan berdasarkan role di tabel profiles.
       const safe = redirectTo && redirectTo.startsWith("/") && !redirectTo.startsWith("//") && !redirectTo.startsWith("/login");
-      if (safe && profile?.role !== "admin") {
+      if (safe) {
         router.history.replace(redirectTo);
       } else if (profile?.role === "admin") {
-        navigate({ to: "/", replace: true });
+        navigate({ to: "/admin", replace: true });
       } else {
         navigate({ to: "/my-orders", search: { pesanan: undefined }, replace: true });
       }
