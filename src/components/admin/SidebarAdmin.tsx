@@ -5,6 +5,7 @@ import {
   FolderTree,
   LayoutDashboard,
   Package,
+  Settings,
   Store,
   Tags,
   Users,
@@ -20,6 +21,7 @@ export const ADMIN_NAV = [
   { to: "/admin/customers", label: "Pelanggan", icon: Users },
   { to: "/admin/wholesale", label: "Grosir", icon: Tags },
   { to: "/admin/quotations", label: "Penawaran", icon: ClipboardList },
+  { to: "/admin/settings", label: "Kontak Toko", icon: Settings },
 ] as const;
 
 export function SidebarAdmin({ onNavigate }: { onNavigate?: () => void }) {
