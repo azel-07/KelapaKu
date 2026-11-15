@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -212,14 +212,19 @@ export type Database = {
           customer_note: string | null
           customer_phone_snapshot: string
           id: string
+          idempotency_key: string | null
           order_number: string
           order_status: Database["public"]["Enums"]["order_status"]
           payment_method: Database["public"]["Enums"]["payment_method"]
           payment_status: Database["public"]["Enums"]["payment_status"]
           shipping_address_snapshot: Json
           shipping_cost: number
+          shipping_method: string | null
+          shipping_rate_id: string | null
+          shipping_rate_snapshot: Json
           subtotal: number
           total_amount: number
+          total_weight_gram: number
           updated_at: string
           user_id: string
         }
@@ -232,14 +237,19 @@ export type Database = {
           customer_note?: string | null
           customer_phone_snapshot: string
           id?: string
+          idempotency_key?: string | null
           order_number?: string
           order_status?: Database["public"]["Enums"]["order_status"]
           payment_method?: Database["public"]["Enums"]["payment_method"]
           payment_status?: Database["public"]["Enums"]["payment_status"]
           shipping_address_snapshot: Json
           shipping_cost?: number
+          shipping_method?: string | null
+          shipping_rate_id?: string | null
+          shipping_rate_snapshot?: Json
           subtotal?: number
           total_amount?: number
+          total_weight_gram?: number
           updated_at?: string
           user_id: string
         }
@@ -252,14 +262,19 @@ export type Database = {
           customer_note?: string | null
           customer_phone_snapshot?: string
           id?: string
+          idempotency_key?: string | null
           order_number?: string
           order_status?: Database["public"]["Enums"]["order_status"]
           payment_method?: Database["public"]["Enums"]["payment_method"]
           payment_status?: Database["public"]["Enums"]["payment_status"]
           shipping_address_snapshot?: Json
           shipping_cost?: number
+          shipping_method?: string | null
+          shipping_rate_id?: string | null
+          shipping_rate_snapshot?: Json
           subtotal?: number
           total_amount?: number
+          total_weight_gram?: number
           updated_at?: string
           user_id?: string
         }
@@ -269,6 +284,13 @@ export type Database = {
             columns: ["address_id"]
             isOneToOne: false
             referencedRelation: "addresses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_shipping_rate_fk"
+            columns: ["shipping_rate_id"]
+            isOneToOne: false
+            referencedRelation: "shipping_rates"
             referencedColumns: ["id"]
           },
           {
@@ -454,6 +476,7 @@ export type Database = {
           storage_info: string | null
           unit: string
           updated_at: string
+          weight_gram: number | null
           wholesale_min_quantity: number
         }
         Insert: {
@@ -474,6 +497,7 @@ export type Database = {
           storage_info?: string | null
           unit: string
           updated_at?: string
+          weight_gram?: number | null
           wholesale_min_quantity?: number
         }
         Update: {
@@ -494,6 +518,7 @@ export type Database = {
           storage_info?: string | null
           unit?: string
           updated_at?: string
+          weight_gram?: number | null
           wholesale_min_quantity?: number
         }
         Relationships: [
@@ -659,6 +684,45 @@ export type Database = {
           },
         ]
       }
+      shipping_rates: {
+        Row: {
+          city_regency: string | null
+          created_at: string
+          flat_cost: number | null
+          id: string
+          is_active: boolean
+          minimum_cost: number
+          province: string
+          rate_per_kg: number | null
+          shipping_method: string
+          updated_at: string
+        }
+        Insert: {
+          city_regency?: string | null
+          created_at?: string
+          flat_cost?: number | null
+          id?: string
+          is_active?: boolean
+          minimum_cost?: number
+          province: string
+          rate_per_kg?: number | null
+          shipping_method: string
+          updated_at?: string
+        }
+        Update: {
+          city_regency?: string | null
+          created_at?: string
+          flat_cost?: number | null
+          id?: string
+          is_active?: boolean
+          minimum_cost?: number
+          province?: string
+          rate_per_kg?: number | null
+          shipping_method?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       store_settings: {
         Row: {
           address: string | null
@@ -792,14 +856,58 @@ export type Database = {
           customer_note: string | null
           customer_phone_snapshot: string
           id: string
+          idempotency_key: string | null
           order_number: string
           order_status: Database["public"]["Enums"]["order_status"]
           payment_method: Database["public"]["Enums"]["payment_method"]
           payment_status: Database["public"]["Enums"]["payment_status"]
           shipping_address_snapshot: Json
           shipping_cost: number
+          shipping_method: string | null
+          shipping_rate_id: string | null
+          shipping_rate_snapshot: Json
           subtotal: number
           total_amount: number
+          total_weight_gram: number
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "orders"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      create_order_from_cart_v2: {
+        Args: {
+          p_address_id: string
+          p_customer_note?: string
+          p_idempotency_key?: string
+          p_shipping_method?: string
+        }
+        Returns: {
+          address_id: string | null
+          admin_note: string | null
+          created_at: string
+          customer_email_snapshot: string | null
+          customer_name_snapshot: string
+          customer_note: string | null
+          customer_phone_snapshot: string
+          id: string
+          idempotency_key: string | null
+          order_number: string
+          order_status: Database["public"]["Enums"]["order_status"]
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          shipping_address_snapshot: Json
+          shipping_cost: number
+          shipping_method: string | null
+          shipping_rate_id: string | null
+          shipping_rate_snapshot: Json
+          subtotal: number
+          total_amount: number
+          total_weight_gram: number
           updated_at: string
           user_id: string
         }
@@ -812,6 +920,31 @@ export type Database = {
       }
       is_admin: { Args: never; Returns: boolean }
       is_approved_wholesale: { Args: never; Returns: boolean }
+      submit_qris_gopay_proof: {
+        Args: { p_order_id: string; p_proof_path: string }
+        Returns: {
+          admin_note: string | null
+          amount: number
+          created_at: string
+          id: string
+          method: Database["public"]["Enums"]["payment_method"]
+          order_id: string
+          paid_at: string | null
+          payment_reference: string | null
+          proof_url: string | null
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+          user_id: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "payments"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       order_status:
@@ -822,7 +955,7 @@ export type Database = {
         | "shipped"
         | "completed"
         | "cancelled"
-      payment_method: "bank_transfer" | "other" | "manual"
+      payment_method: "bank_transfer" | "other" | "manual" | "qris_gopay"
       payment_status:
         | "unpaid"
         | "pending_confirmation"
@@ -976,7 +1109,7 @@ export const Constants = {
         "completed",
         "cancelled",
       ],
-      payment_method: ["bank_transfer", "other", "manual"],
+      payment_method: ["bank_transfer", "other", "manual", "qris_gopay"],
       payment_status: [
         "unpaid",
         "pending_confirmation",

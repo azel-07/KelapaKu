@@ -31,6 +31,7 @@ export const PAYMENT_METHOD: Record<PaymentMethod, string> = {
   bank_transfer: "Transfer Bank",
   manual: "Manual",
   other: "Lainnya",
+  qris_gopay: "QRIS",
 };
 
 export const QUOTATION_STATUS: Record<QuotationStatus, { label: string; tone: Tone }> = {

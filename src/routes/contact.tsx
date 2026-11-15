@@ -29,7 +29,14 @@ function ContactPage() {
   if (s?.phone) items.push({ icon: Phone, label: "Telepon", value: s.phone, href: `tel:${s.phone.replace(/[^\d+]/g, "")}` });
   if (s?.email) items.push({ icon: Mail, label: "Email", value: s.email, href: `mailto:${s.email}` });
   if (s?.instagram) items.push({ icon: Instagram, label: "Instagram", value: s.instagram, href: instagramLink(s.instagram) });
-  if (s?.address) items.push({ icon: MapPin, label: "Alamat", value: s.address, href: s.maps_url || undefined });
+  if (s?.address) {
+  items.push({
+    icon: MapPin,
+    label: "Alamat",
+    value: s.address,
+    ...(s.maps_url ? { href: s.maps_url } : {}),
+  });
+}
   if (s?.operating_hours) items.push({ icon: Clock, label: "Jam operasional", value: s.operating_hours });
 
   return (
