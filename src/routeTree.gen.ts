@@ -29,6 +29,7 @@ import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminPaymentsRouteImport } from './routes/_authenticated/admin/payments'
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin/products'
 import { Route as AuthenticatedAdminQuotationsRouteImport } from './routes/_authenticated/admin/quotations'
+import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
 import { Route as AuthenticatedAdminWholesaleRouteImport } from './routes/_authenticated/admin/wholesale'
 
 const IndexRoute = IndexRouteImport.update({
@@ -136,6 +137,12 @@ const AuthenticatedAdminQuotationsRoute =
     path: '/quotations',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminSettingsRoute =
+  AuthenticatedAdminSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminWholesaleRoute =
   AuthenticatedAdminWholesaleRouteImport.update({
     id: '/wholesale',
@@ -162,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/admin/payments': typeof AuthenticatedAdminPaymentsRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/quotations': typeof AuthenticatedAdminQuotationsRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/wholesale': typeof AuthenticatedAdminWholesaleRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -183,6 +191,7 @@ export interface FileRoutesByTo {
   '/admin/payments': typeof AuthenticatedAdminPaymentsRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/quotations': typeof AuthenticatedAdminQuotationsRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/wholesale': typeof AuthenticatedAdminWholesaleRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
@@ -207,6 +216,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/payments': typeof AuthenticatedAdminPaymentsRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
   '/_authenticated/admin/quotations': typeof AuthenticatedAdminQuotationsRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/wholesale': typeof AuthenticatedAdminWholesaleRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -231,6 +241,7 @@ export interface FileRouteTypes {
     | '/admin/payments'
     | '/admin/products'
     | '/admin/quotations'
+    | '/admin/settings'
     | '/admin/wholesale'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -252,6 +263,7 @@ export interface FileRouteTypes {
     | '/admin/payments'
     | '/admin/products'
     | '/admin/quotations'
+    | '/admin/settings'
     | '/admin/wholesale'
     | '/admin'
   id:
@@ -275,6 +287,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/payments'
     | '/_authenticated/admin/products'
     | '/_authenticated/admin/quotations'
+    | '/_authenticated/admin/settings'
     | '/_authenticated/admin/wholesale'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
@@ -432,6 +445,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminQuotationsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/wholesale': {
       id: '/_authenticated/admin/wholesale'
       path: '/wholesale'
@@ -449,6 +469,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminPaymentsRoute: typeof AuthenticatedAdminPaymentsRoute
   AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRoute
   AuthenticatedAdminQuotationsRoute: typeof AuthenticatedAdminQuotationsRoute
+  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminWholesaleRoute: typeof AuthenticatedAdminWholesaleRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
@@ -461,6 +482,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminPaymentsRoute: AuthenticatedAdminPaymentsRoute,
     AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRoute,
     AuthenticatedAdminQuotationsRoute: AuthenticatedAdminQuotationsRoute,
+    AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
     AuthenticatedAdminWholesaleRoute: AuthenticatedAdminWholesaleRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   }

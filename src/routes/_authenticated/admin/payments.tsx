@@ -36,6 +36,7 @@ type Row = {
   status: PaymentStatus;
   payment_reference: string | null;
   proof_url: string | null;
+    proof_signed_url?: string | null;
   paid_at: string | null;
   created_at: string;
   verified_at: string | null;
@@ -61,8 +62,41 @@ function AdminPayments() {
         .from("payments")
         .select("*, orders(order_number, total_amount, order_status), profiles!payments_user_id_fkey(full_name, email)")
         .order("created_at", { ascending: false });
+
       if (error) throw error;
-      return data as unknown as Row[];
+
+      const rows = (data ?? []) as unknown as Row[];
+
+      return Promise.all(
+        rows.map(async (payment) => {
+          if (!payment.proof_url) {
+            return { ...payment, proof_signed_url: null };
+          }
+
+          // URL lama yang sudah berupa URL lengkap tetap bisa digunakan.
+          if (/^https?:\/\//.test(payment.proof_url)) {
+            return {
+              ...payment,
+              proof_signed_url: payment.proof_url,
+            };
+          }
+
+          const { data: signed, error: signedError } =
+            await supabase.storage
+              .from("payment-proofs")
+              .createSignedUrl(payment.proof_url, 300);
+
+          if (signedError) {
+            console.error("Gagal membuat signed URL:", signedError);
+            return { ...payment, proof_signed_url: null };
+          }
+
+          return {
+            ...payment,
+            proof_signed_url: signed.signedUrl,
+          };
+        }),
+      );
     },
   });
 
@@ -110,13 +144,22 @@ function AdminPayments() {
     },
     { header: "Status", cell: (p) => <StatusBadge {...PAYMENT_STATUS[p.status]} /> },
     { header: "Tanggal bayar", cell: (p) => <span className="whitespace-nowrap text-muted-foreground">{formatDate(p.paid_at ?? p.created_at)}</span> },
-    {
+        {
       header: "Bukti",
       cell: (p) =>
-        p.proof_url && /^https?:\/\//.test(p.proof_url) ? (
-          <a href={p.proof_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">Lihat <ExternalLink className="size-3" /></a>
+        p.proof_signed_url ? (
+          <a
+            href={p.proof_signed_url}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 text-primary hover:underline"
+          >
+            Lihat bukti <ExternalLink className="size-3" />
+          </a>
         ) : (
-          <span className="text-muted-foreground">{p.payment_reference || "-"}</span>
+          <span className="text-muted-foreground">
+            {p.proof_url ? "Bukti tidak dapat dibuka" : p.payment_reference || "-"}
+          </span>
         ),
     },
     {

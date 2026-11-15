@@ -44,8 +44,8 @@ export const cartQuery = (userId: string) =>
       const { data, error } = await supabase
         .from("cart_items")
         .select(
-          "id, quantity, product_id, products(id, name, slug, unit, retail_price, stock_quantity, min_retail_quantity, is_active, product_images(image_url, is_primary, sort_order))",
-        )
+  "id, quantity, product_id, products(id, name, slug, unit, retail_price, stock_quantity, min_retail_quantity, is_active, weight_gram, product_images(image_url, is_primary, sort_order))",
+)
         .eq("user_id", userId)
         .order("created_at");
       if (error) throw error;
@@ -77,8 +77,8 @@ export const myOrdersQuery = (userId: string) =>
       const { data, error } = await supabase
         .from("orders")
         .select(
-          "id, order_number, created_at, order_status, payment_status, payment_method, subtotal, shipping_cost, total_amount, customer_note, shipping_address_snapshot, order_items(id, product_name_snapshot, unit_snapshot, quantity, unit_price_snapshot, price_type_snapshot, subtotal), payments(id, amount, status, method, paid_at, created_at)",
-        )
+  "id, order_number, created_at, order_status, payment_status, payment_method, subtotal, shipping_cost, total_amount, customer_note, shipping_address_snapshot, order_items(id, product_name_snapshot, unit_snapshot, quantity, unit_price_snapshot, price_type_snapshot, subtotal), payments(id, amount, status, method, paid_at, created_at, proof_url)",
+)
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
       if (error) throw error;
