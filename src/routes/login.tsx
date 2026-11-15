@@ -83,7 +83,7 @@ function LoginPage() {
       if (safe && profile?.role !== "admin") {
         router.history.replace(redirectTo);
       } else if (profile?.role === "admin") {
-        navigate({ to: "/", replace: true });
+        navigate({ to: "/admin", replace: true });
       } else {
         navigate({ to: "/my-orders", search: { pesanan: undefined }, replace: true });
       }
