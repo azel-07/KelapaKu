@@ -53,7 +53,7 @@ const FIELDS: { key: keyof Values; label: string; placeholder?: string; hint?: s
   { key: "instagram", label: "Instagram (opsional)", placeholder: "@kelapaku" },
   { key: "address", label: "Alamat (opsional)", multiline: true },
   { key: "maps_url", label: "Link Google Maps (opsional)", placeholder: "https://maps.app.goo.gl/…" },
-  { key: "operating_hours", label: "Jam operasional (opsional)", placeholder: "Senin – Sabtu, 08.00 – 17.00 WIB" },
+  { key: "operating_hours", label: "Jam operasional (opsional)", placeholder: "Senin – Sabtu, 08.00 – 17.00 WIB", multiline: true },
 ];
 
 const toValues = (s?: StoreSettings | null): Values => ({

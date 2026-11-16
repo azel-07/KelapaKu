@@ -62,9 +62,9 @@ function ContactPage() {
                     <span className="grid size-11 place-items-center rounded-2xl bg-primary-soft text-primary"><Icon className="size-5" /></span>
                     <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-earth">{label}</p>
                     {href ? (
-                      <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className="mt-1 block break-words font-medium hover:text-primary">{value}</a>
+                      <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className="mt-1 block whitespace-pre-line break-words font-medium hover:text-primary">{value}</a>
                     ) : (
-                      <p className="mt-1 break-words font-medium">{value}</p>
+                      <p className="mt-1 whitespace-pre-line break-words font-medium">{value}</p>
                     )}
                   </div>
                 ))}

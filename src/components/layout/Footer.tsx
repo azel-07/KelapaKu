@@ -68,7 +68,7 @@ export function Footer() {
                   {s.maps_url ? <a href={s.maps_url} target="_blank" rel="noreferrer" className={linkCls}>{s.address}</a> : s.address}
                 </li>
               )}
-              {s?.operating_hours && <li className="flex gap-3"><Clock className="size-4 shrink-0 text-leaf" />{s.operating_hours}</li>}
+              {s?.operating_hours && <li className="flex gap-3"><Clock className="size-4 shrink-0 text-leaf" /><span className="whitespace-pre-line">{s.operating_hours}</span></li>}
             </ul>
           )}
         </div>
