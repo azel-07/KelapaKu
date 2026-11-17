@@ -138,6 +138,7 @@ function ChatWidget() {
       createChat({
         webhookUrl: 'https://n8n-unpaedvoxswt.eu7.sumopod.my.id/webhook/f638e3f2-d498-47fd-ad0c-05cb9fc250a2/chat',
         initialMessages: ['Halo, saya Coco dari KelapaKu. Ada yang bisa saya bantu?'],
+        defaultLanguage: 'id',
         i18n: {
           id: {
             title: 'Coco — KelapaKu',
