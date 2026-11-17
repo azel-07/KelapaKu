@@ -203,7 +203,7 @@
 }
 
 /* n8n chat widget — warna brand KelapaKu */
-:root {
+#n8n-chat {
   --chat--color-primary: #245c3a;
   --chat--color-primary-shade-50: #1e4a2f;
   --chat--color-primary-shade-100: #183825;
