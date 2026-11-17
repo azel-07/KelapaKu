@@ -131,28 +131,27 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function ChatWidget() {
   useEffect(() => {
-    let cancelled = false;
-    import("https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js" as string)
-      .then((mod) => {
-        if (cancelled) return;
-        mod.createChat({
-          webhookUrl:
-            "https://n8n-unpaedvoxswt.eu7.sumopod.my.id/webhook/f638e3f2-d498-47fd-ad0c-05cb9fc250a2/chat",
-          initialMessages: ["Halo, saya Coco dari KelapaKu. Ada yang bisa saya bantu?"],
-          i18n: {
-            id: {
-              title: "Coco — KelapaKu",
-              subtitle: "Asisten virtual KelapaKu",
-              inputPlaceholder: "Ketik pesan Anda...",
-              getStarted: "Mulai percakapan",
-              footer: "",
-            },
+    const script = document.createElement("script");
+    script.type = "module";
+    script.textContent = `
+      import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+      createChat({
+        webhookUrl: 'https://n8n-unpaedvoxswt.eu7.sumopod.my.id/webhook/f638e3f2-d498-47fd-ad0c-05cb9fc250a2/chat',
+        initialMessages: ['Halo, saya Coco dari KelapaKu. Ada yang bisa saya bantu?'],
+        i18n: {
+          id: {
+            title: 'Coco — KelapaKu',
+            subtitle: 'Asisten virtual KelapaKu',
+            inputPlaceholder: 'Ketik pesan Anda...',
+            getStarted: 'Mulai percakapan',
+            footer: '',
           },
-        });
-      })
-      .catch((err) => console.error("Gagal memuat chat:", err));
+        },
+      });
+    `;
+    document.body.appendChild(script);
     return () => {
-      cancelled = true;
+      script.remove();
     };
   }, []);
 
