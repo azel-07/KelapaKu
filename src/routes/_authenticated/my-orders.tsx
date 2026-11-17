@@ -101,7 +101,11 @@ function PaymentPanel({
       });
 
       if (rpcError) {
-        await supabase.storage.from("payment-proofs").remove([path]);
+        try {
+          await supabase.storage.from("payment-proofs").remove([path]);
+        } catch {
+          // file cleanup error ignored to prioritize surfacing RPC error
+        }
         throw new Error(rpcError.message);
       }
 

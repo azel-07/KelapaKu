@@ -109,16 +109,33 @@ function AdminPayments() {
 
   const verify = useMutation({
     mutationFn: async ({ row, kind }: { row: Row; kind: "confirmed" | "rejected" }) => {
-      const now = new Date().toISOString();
-      const a = await supabase
-        .from("payments")
-        .update({ status: kind, verified_by: user!.id, verified_at: now, admin_note: note.trim() || null })
-        .eq("id", row.id);
-      if (a.error) throw a.error;
-      const orderUpdate: { payment_status: PaymentStatus; order_status?: "payment_confirmed" } = { payment_status: kind };
-      if (kind === "confirmed" && row.orders?.order_status === "awaiting_payment") orderUpdate.order_status = "payment_confirmed";
-      const b = await supabase.from("orders").update(orderUpdate).eq("id", row.order_id);
-      if (b.error) throw b.error;
+      if (kind === "confirmed") {
+        if (!row.proof_url) {
+          throw new Error("Bukti pembayaran belum diunggah oleh pelanggan");
+        }
+        if (row.orders && Number(row.amount) !== Number(row.orders.total_amount)) {
+          throw new Error(
+            `Nominal pembayaran (${formatRupiah(row.amount)}) tidak sesuai dengan total tagihan pesanan (${formatRupiah(row.orders.total_amount)})`
+          );
+        }
+      }
+
+      const payload: {
+        p_payment_id: string;
+        p_action: string;
+        p_admin_note?: string;
+      } = {
+        p_payment_id: row.id,
+        p_action: kind,
+      };
+      if (note.trim()) {
+        payload.p_admin_note = note.trim();
+      }
+
+      const { data, error } = await supabase.rpc("admin_verify_payment", payload);
+
+      if (error) throw error;
+      return data;
     },
     onSuccess: (_d, v) => {
       qc.invalidateQueries({ queryKey: ["admin"] });

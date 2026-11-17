@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -845,6 +845,70 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_update_order: {
+        Args: {
+          p_admin_note?: string
+          p_order_id: string
+          p_order_status: string
+          p_shipping_cost: number
+        }
+        Returns: {
+          address_id: string | null
+          admin_note: string | null
+          created_at: string
+          customer_email_snapshot: string | null
+          customer_name_snapshot: string
+          customer_note: string | null
+          customer_phone_snapshot: string
+          id: string
+          idempotency_key: string | null
+          order_number: string
+          order_status: Database["public"]["Enums"]["order_status"]
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          shipping_address_snapshot: Json
+          shipping_cost: number
+          shipping_method: string | null
+          shipping_rate_id: string | null
+          shipping_rate_snapshot: Json
+          subtotal: number
+          total_amount: number
+          total_weight_gram: number
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "orders"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      admin_verify_payment: {
+        Args: { p_action: string; p_admin_note?: string; p_payment_id: string }
+        Returns: {
+          admin_note: string | null
+          amount: number
+          created_at: string
+          id: string
+          method: Database["public"]["Enums"]["payment_method"]
+          order_id: string
+          paid_at: string | null
+          payment_reference: string | null
+          proof_url: string | null
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+          user_id: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "payments"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       create_order_from_cart: {
         Args: { p_address_id: string; p_customer_note?: string }
         Returns: {
@@ -1133,3 +1197,4 @@ export const Constants = {
     },
   },
 } as const
+

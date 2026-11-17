@@ -78,6 +78,11 @@ export function FormProduct({ product, onSaved, onCancel }: { product?: ProductR
 
   const mutation = useMutation({
     mutationFn: async (v: z.output<typeof schema>) => {
+      const cat = categories.data?.find((c) => c.id === v.category_id);
+      if (cat && !cat.is_active && cat.id !== product?.category_id) {
+        throw new Error("Kategori yang dipilih sedang nonaktif. Silakan pilih kategori aktif.");
+      }
+
       const payload = {
         ...v,
         description: v.description || null,
@@ -139,7 +144,13 @@ export function FormProduct({ product, onSaved, onCancel }: { product?: ProductR
             <SelectTrigger className="rounded-xl"><SelectValue placeholder={categories.isLoading ? "Memuat…" : "Pilih kategori"} /></SelectTrigger>
             <SelectContent>
               {categories.data?.map((c) => (
-                <SelectItem key={c.id} value={c.id}>{c.name}{!c.is_active && " (nonaktif)"}</SelectItem>
+                <SelectItem
+                  key={c.id}
+                  value={c.id}
+                  disabled={!c.is_active && c.id !== values.category_id}
+                >
+                  {c.name}{!c.is_active ? " (nonaktif)" : ""}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>

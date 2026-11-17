@@ -126,12 +126,29 @@ function OrderDetail({ id }: { id: string }) {
       const cost = Number(shipping);
       if (!Number.isFinite(cost) || cost < 0) throw new Error("Ongkos kirim tidak valid");
       if (note.length > 1000) throw new Error("Catatan admin maksimal 1000 karakter");
-      const subtotal = Number(order.data!.subtotal);
-      const { error } = await supabase
-        .from("orders")
-        .update({ order_status: status, shipping_cost: cost, total_amount: subtotal + cost, admin_note: note.trim() || null })
-        .eq("id", id);
+
+      if (status === "completed" && order.data!.payment_status !== "confirmed") {
+        throw new Error("Pesanan belum dapat diselesaikan karena pembayaran belum dikonfirmasi.");
+      }
+
+      const payload: {
+        p_order_id: string;
+        p_order_status: string;
+        p_shipping_cost: number;
+        p_admin_note?: string;
+      } = {
+        p_order_id: id,
+        p_order_status: status,
+        p_shipping_cost: cost,
+      };
+      if (note.trim()) {
+        payload.p_admin_note = note.trim();
+      }
+
+      const { data, error } = await supabase.rpc("admin_update_order", payload);
+
       if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin"] });
@@ -198,8 +215,24 @@ function OrderDetail({ id }: { id: string }) {
           <Label>Status pesanan</Label>
           <Select value={status} onValueChange={(v) => setStatus(v as OrderStatus)}>
             <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
-            <SelectContent>{STATUS_OPTIONS.map((s) => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}</SelectContent>
+            <SelectContent>
+              {STATUS_OPTIONS.map((s) => (
+                <SelectItem
+                  key={s.value}
+                  value={s.value}
+                  disabled={s.value === "completed" && o.payment_status !== "confirmed"}
+                >
+                  {s.label}
+                  {s.value === "completed" && o.payment_status !== "confirmed" ? " (Perlu Konfirmasi Pembayaran)" : ""}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
+          {status === "completed" && o.payment_status !== "confirmed" && (
+            <p className="text-xs text-destructive">
+              Pesanan tidak dapat diselesaikan jika pembayaran belum dikonfirmasi.
+            </p>
+          )}
           {status === "cancelled" && o.order_status !== "cancelled" && <p className="text-xs text-earth">Catatan: membatalkan pesanan tidak mengembalikan stok secara otomatis.</p>}
         </div>
         <div className="space-y-1.5">
