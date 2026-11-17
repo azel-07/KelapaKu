@@ -12,6 +12,12 @@ import { cn } from "@/lib/utils";
 
 const MAX_SIZE = 5 * 1024 * 1024;
 
+const ALLOWED_TYPES: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+};
+
 type Img = { id: string; image_url: string; is_primary: boolean; sort_order: number; alt_text: string | null };
 
 export function ProductImagesManager({ productId, productName }: { productId: string; productName: string }) {
@@ -61,11 +67,25 @@ export function ProductImagesManager({ productId, productName }: { productId: st
   const upload = useMutation({
     mutationFn: async (files: File[]) => {
       for (const file of files) {
-        if (!file.type.startsWith("image/")) throw new Error(`${file.name} bukan file gambar`);
-        if (file.size > MAX_SIZE) throw new Error(`${file.name} lebih dari 5 MB`);
-        const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+        const ext = ALLOWED_TYPES[file.type];
+
+        if (!ext) {
+          throw new Error(`${file.name} harus JPG, PNG, atau WEBP`);
+        }
+
+        if (file.size === 0) {
+          throw new Error(`${file.name} kosong atau tidak valid`);
+        }
+
+        if (file.size > MAX_SIZE) {
+          throw new Error(`${file.name} lebih dari 5 MB`);
+        }
+
         const path = `products/${productId}/${crypto.randomUUID()}.${ext}`;
-        const { error } = await supabase.storage.from(PRODUCT_BUCKET).upload(path, file, { contentType: file.type });
+        const { error } = await supabase.storage
+          .from(PRODUCT_BUCKET)
+          .upload(path, file, { contentType: file.type });
+
         if (error) throw error;
         await addRow(path);
       }
@@ -111,7 +131,18 @@ export function ProductImagesManager({ productId, productName }: { productId: st
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
-        <input ref={input} type="file" accept="image/*" multiple hidden onChange={(e) => { const f = Array.from(e.target.files ?? []); if (f.length) upload.mutate(f); e.target.value = ""; }} />
+        <input
+          ref={input}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          hidden
+          onChange={(e) => {
+            const f = Array.from(e.target.files ?? []);
+            if (f.length) upload.mutate(f);
+            e.target.value = "";
+          }}
+        />
         <Button type="button" onClick={() => input.current?.click()} disabled={upload.isPending}>
           {upload.isPending ? <Loader2 className="animate-spin" /> : <ImagePlus />} Unggah gambar
         </Button>
