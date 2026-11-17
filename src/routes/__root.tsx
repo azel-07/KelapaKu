@@ -103,6 +103,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap",
       },
+      {
+        rel: "stylesheet",
+        href: "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css",
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -125,6 +129,36 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function ChatWidget() {
+  useEffect(() => {
+    let cancelled = false;
+    import("https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js" as string)
+      .then((mod) => {
+        if (cancelled) return;
+        mod.createChat({
+          webhookUrl:
+            "https://n8n-unpaedvoxswt.eu7.sumopod.my.id/webhook/f638e3f2-d498-47fd-ad0c-05cb9fc250a2/chat",
+          initialMessages: ["Halo, saya Coco dari KelapaKu. Ada yang bisa saya bantu?"],
+          i18n: {
+            id: {
+              title: "Coco — KelapaKu",
+              subtitle: "Asisten virtual KelapaKu",
+              inputPlaceholder: "Ketik pesan Anda...",
+              getStarted: "Mulai percakapan",
+              footer: "",
+            },
+          },
+        });
+      })
+      .catch((err) => console.error("Gagal memuat chat:", err));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return <div id="n8n-chat" />;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -133,6 +167,7 @@ function RootComponent() {
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <AuthProvider>
         <Outlet />
+        <ChatWidget />
         <Toaster position="top-center" richColors />
       </AuthProvider>
     </QueryClientProvider>
