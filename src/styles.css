@@ -201,3 +201,24 @@
     transform: translateY(0);
   }
 }
+
+/* n8n chat widget — warna brand KelapaKu */
+#n8n-chat {
+  --chat--color-primary: #245c3a;
+  --chat--color-primary-shade-50: #1e4a2f;
+  --chat--color-primary-shade-100: #183825;
+  --chat--color-secondary: #a8c686;
+  --chat--color-secondary-shade-50: #8fb068;
+  --chat--color-light: #f5f0e6;
+  --chat--color-white: #ffffff;
+  --chat--color-dark: #1a2e22;
+  --chat--toggle--background: var(--chat--color-primary);
+  --chat--toggle--hover--background: var(--chat--color-primary-shade-50);
+  --chat--toggle--active--background: var(--chat--color-primary-shade-100);
+  --chat--header--background: var(--chat--color-primary);
+  --chat--header--color: var(--chat--color-white);
+  --chat--message--bot--background: #f5f0e6;
+  --chat--message--bot--color: #1a2e22;
+  --chat--message--user--background: var(--chat--color-primary);
+  --chat--message--user--color: #ffffff;
+}
