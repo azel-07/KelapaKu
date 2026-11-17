@@ -39,3 +39,4 @@ use the editor.
 - Signed-in customer pages live under `src/routes/_authenticated/` (client-only gate redirecting to `/login?redirect=`). Why: the session is stored in the browser.
 - Admin pages live under `src/routes/_authenticated/admin/`; the layout gate calls the `is_admin()` DB function and RLS admin policies protect every query. Why: admin access must be validated by the database, not by hidden buttons.
 - Admin uploads go to `product-images/products/<productId>/…`; only files under that prefix are deleted with a product. Why: root-level bucket photos are shared.
+- Store contact info lives in the single-row `store_settings` table (public read, admin-only update) and is read via `useStoreSettings` in `src/lib/site.ts`; never hardcode contacts. Why: admins edit contacts from /admin/settings.

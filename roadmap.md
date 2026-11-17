@@ -7,7 +7,7 @@
 - [x] Tahap 5: Keranjang, checkout (fungsi aman), riwayat pesanan
 - [x] Tahap 6: Dashboard admin + semua manajemen
 - [ ] Tahap 7: Pengujian menyeluruh
-- [ ] Ganti info kontak contoh (WhatsApp, email, alamat) dengan data asli
+- [x] Kontak toko dari database + halaman admin Kontak Toko (data asli sudah terisi)
 - [ ] Keputusan user: ongkos kirim (saat ini Rp0) dan cara pembayaran/upload bukti transfer
 - [ ] Fitur customer: form pengajuan grosir, form permintaan penawaran, kirim bukti pembayaran (menunggu keputusan pembayaran)
 - [ ] Opsional: kembalikan stok otomatis saat pesanan dibatalkan (perlu persetujuan perubahan DB)
